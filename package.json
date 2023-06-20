@@ -15,5 +15,9 @@
   "license": "ISC",
   "engines": {
     "node": ">=18.16"
+  },
+  "dependencies": {
+    "csv-generate": "^4.2.6",
+    "csv-parse": "^5.4.0"
   }
 }

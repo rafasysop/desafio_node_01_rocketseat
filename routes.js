@@ -30,6 +30,24 @@ export const routes = [
         );
       }
 
+      if (req.body?.length > 1) {
+        req.body.forEach((item) => {
+          const newTask = {
+            id: tasks.length + 1,
+            title: item.title,
+            description: item.description,
+            completed_at: null,
+            created_at: new Date(),
+            updated_at: null,
+          };
+
+          tasks.push(newTask);
+        });
+        res.writeHead(201, { "Content-Type": "application/json" });
+
+        return res.end(JSON.stringify({ msg: "created", tasks }));
+      }
+
       if (!req?.body?.title) {
         res.writeHead(400, { "Content-Type": "application/json" });
 

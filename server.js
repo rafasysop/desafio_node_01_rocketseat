@@ -1,6 +1,7 @@
 import http from "node:http";
 import { routes } from "./routes.js";
-import { log } from "node:console";
+import { generate } from "csv-generate";
+import { parse } from "csv-parse";
 
 const server = http.createServer(async (req, res) => {
   res.writeHead(200, { "Content-Type": "application/json" });
@@ -17,7 +18,31 @@ const server = http.createServer(async (req, res) => {
     try {
       req.body = JSON.parse(body);
     } catch (error) {
-      console.log("erro no body");
+      try {
+        req.body = [];
+        const parser = parse(body, {
+          trim: true,
+          skip_empty_lines: true,
+        });
+
+        for await (const record of parser) {
+          const title = record[0];
+          const description = record[1];
+          req.body.push({ title, description });
+        }
+        // while ((record = this.read()) !== null) {
+        //   const title = record[0];
+        //   const description = record[1];
+        //   importedCSV.push({ title, description });
+        // }
+        // })
+        // .on("end", function () {
+        //   console.log("a");
+        //   req.body = { importedCSV };
+        // });
+      } catch (error) {
+        console.log("erro parse");
+      }
     }
   }
 
